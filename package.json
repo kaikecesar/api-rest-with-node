@@ -6,7 +6,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "lint": "eslint src --ext .ts"
+    "lint": "eslint src --ext .ts",
+    "knex": "node --import tsx/esm ./node_modules/.bin/knex"
   },
   "repository": {
     "type": "git",
