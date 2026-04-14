@@ -3,6 +3,7 @@ import fastify from 'fastify';
 
 // Application
 import { connection } from './database.js';
+import { env } from './env/index.ts';
 
 const app = fastify();
 
@@ -11,4 +12,4 @@ app.get('/welcome', async () => {
   return tables;
 });
 
-app.listen({ port: 3333 }).then(() => console.log('HTTP server running!'));
+app.listen({ port: env.PORT }).then(() => console.log('HTTP server running!'));
