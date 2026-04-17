@@ -4,6 +4,9 @@
   "type": "module",
   "description": "",
   "main": "index.js",
+  "engines": {
+    "node": ">= 18"
+  },
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "lint": "eslint src --ext .ts",
@@ -31,6 +34,7 @@
     "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.2",
+    "sqlite3": "^6.0.1",
     "vitest": "^4.1.4"
   },
   "dependencies": {
@@ -38,7 +42,7 @@
     "dotenv": "^17.4.2",
     "fastify": "^5.8.5",
     "knex": "^3.2.9",
-    "sqlite3": "^6.0.1",
+    "pg": "^8.20.0",
     "zod": "^4.3.6"
   }
 }
