@@ -41,7 +41,7 @@ describe('Transactions routes', () => {
         type: 'credit',
       });
 
-    const cookies = createTransactionResponse.get('Set-Cookie');
+    const cookies = createTransactionResponse.get('Set-Cookie') ?? [];
 
     const listTransactionsResponse = await request(app.server)
       .get('/transactions')
@@ -65,7 +65,7 @@ describe('Transactions routes', () => {
         type: 'credit',
       });
 
-    const cookies = createTransactionResponse.get('Set-Cookie');
+    const cookies = createTransactionResponse.get('Set-Cookie') ?? [];
 
     const listTransactionsResponse = await request(app.server)
       .get('/transactions')
@@ -96,7 +96,7 @@ describe('Transactions routes', () => {
         type: 'credit',
       });
 
-    const cookies = createTransactionResponse.get('Set-Cookie');
+    const cookies = createTransactionResponse.get('Set-Cookie') ?? [];
 
     await request(app.server)
       .post('/transactions')
