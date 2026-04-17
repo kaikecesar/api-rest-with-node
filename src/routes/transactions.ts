@@ -6,9 +6,16 @@ import { z } from 'zod';
 import { connection } from '../database.ts';
 
 export async function transactionsRoutes(app: FastifyInstance) {
-  app.get('/welcome', async () => {
-    const tables = await connection('sqlite_schema').select('*');
-    return tables;
+  // List
+  app.get('/', async () => {
+    const transactions = await connection('transactions').select();
+    const result = await connection('transactions')
+      .count('id', { as: 'count' })
+      .first();
+
+    const count = result?.count ?? 0;
+
+    return { transactions, count };
   });
 
   app.post('/', async (request, reply) => {
