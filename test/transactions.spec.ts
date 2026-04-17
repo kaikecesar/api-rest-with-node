@@ -6,7 +6,7 @@ import { expect, it, beforeAll, afterAll, describe, beforeEach } from 'vitest';
 import request from 'supertest';
 
 // Application
-import { app } from '../app.ts';
+import { app } from '../src/app.ts';
 
 describe('Transactions routes', () => {
   beforeAll(async () => {
