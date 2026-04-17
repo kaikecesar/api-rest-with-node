@@ -4,44 +4,73 @@ import { z } from 'zod';
 
 // Application
 import { connection } from '../database.ts';
+import { checkSessionIdExists } from '../middlewares/check-session-id-exists.ts';
 
 export async function transactionsRoutes(app: FastifyInstance) {
   // List
-  app.get('/', async () => {
-    const transactions = await connection('transactions').select();
-    const result = await connection('transactions')
-      .count('id', { as: 'count' })
-      .first();
+  app.get(
+    '/',
+    {
+      preHandler: [checkSessionIdExists],
+    },
+    async (request) => {
+      const { sessionId } = request.cookies;
 
-    const count = result?.count ?? 0;
+      const transactions = await connection('transactions')
+        .where('session_id', sessionId)
+        .select();
 
-    return { transactions, count };
-  });
+      const result = await connection('transactions')
+        .count('id', { as: 'count' })
+        .first();
+
+      const count = result?.count ?? 0;
+
+      return { transactions, count };
+    },
+  );
 
   // Get
-  app.get('/:id', async (request) => {
-    const getTransactionsParamsSchema = z.object({
-      id: z.string().uuid(),
-    });
+  app.get(
+    '/:id',
+    {
+      preHandler: [checkSessionIdExists],
+    },
+    async (request) => {
+      const getTransactionsParamsSchema = z.object({
+        id: z.string().uuid(),
+      });
 
-    const { id } = getTransactionsParamsSchema.parse(request.params);
+      const { sessionId } = request.cookies;
 
-    const transaction = await connection('transactions')
-      .select('*')
-      .where('id', id)
-      .first();
+      const { id } = getTransactionsParamsSchema.parse(request.params);
 
-    return transaction;
-  });
+      const transaction = await connection('transactions')
+        .select('*')
+        .where({ id, session_id: sessionId })
+        .first();
+
+      return transaction;
+    },
+  );
 
   // Summary
-  app.get('/summary', async () => {
-    const summary = await connection('transactions')
-      .sum('amount', { as: 'amount' })
-      .first();
+  app.get(
+    '/summary',
+    {
+      preHandler: [checkSessionIdExists],
+    },
+    async (request) => {
+      const { sessionId } = request.cookies;
 
-    return { summary };
-  });
+      const summary = await connection('transactions')
+        .where('session_id', sessionId)
+        .sum('amount', { as: 'amount' })
+        .first();
+
+      return { summary };
+    },
+  );
 
   app.post('/', async (request, reply) => {
     // Validation schema
