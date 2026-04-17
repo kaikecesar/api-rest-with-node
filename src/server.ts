@@ -1,21 +1,5 @@
-// Libraries
-import fastify from 'fastify';
-import cookie from '@fastify/cookie';
-
 // Application
 import { env } from './env/index.ts';
-import { transactionsRoutes } from './routes/transactions.ts';
-
-const app: fastify.FastifyInstance = fastify();
-
-app.register(cookie);
-
-app.addHook('preHandler', async (request) => {
-  console.log(`[${request.method}] ${request.url}`);
-});
-
-app.register(transactionsRoutes, {
-  prefix: 'transactions',
-});
+import { app } from './app.ts';
 
 app.listen({ port: env.PORT }).then(() => console.log('HTTP server running!'));
