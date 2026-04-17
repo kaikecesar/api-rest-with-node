@@ -55,10 +55,22 @@ export async function transactionsRoutes(app: FastifyInstance) {
       request.body,
     );
 
+    let sessionId = request.cookies.sessionId;
+
+    if (!sessionId) {
+      sessionId = crypto.randomUUID();
+
+      reply.cookie('sessionId', sessionId, {
+        path: '/',
+        maxAge: 60 * 60 * 24 * 7, // 7 days
+      });
+    }
+
     await connection('transactions').insert({
       id: crypto.randomUUID(),
       amount: type === 'credit' ? amount : amount * -1,
       title,
+      session_id: sessionId,
     });
 
     return reply.status(201).send();
