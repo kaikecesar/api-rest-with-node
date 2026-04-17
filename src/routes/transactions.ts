@@ -34,6 +34,15 @@ export async function transactionsRoutes(app: FastifyInstance) {
     return transaction;
   });
 
+  // Summary
+  app.get('/summary', async () => {
+    const summary = await connection('transactions')
+      .sum('amount', { as: 'amount' })
+      .first();
+
+    return { summary };
+  });
+
   app.post('/', async (request, reply) => {
     // Validation schema
     const createTransactionBodySchema = z.object({
