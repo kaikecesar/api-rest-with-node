@@ -18,6 +18,22 @@ export async function transactionsRoutes(app: FastifyInstance) {
     return { transactions, count };
   });
 
+  // Get
+  app.get('/:id', async (request) => {
+    const getTransactionsParamsSchema = z.object({
+      id: z.string().uuid(),
+    });
+
+    const { id } = getTransactionsParamsSchema.parse(request.params);
+
+    const transaction = await connection('transactions')
+      .select('*')
+      .where('id', id)
+      .first();
+
+    return transaction;
+  });
+
   app.post('/', async (request, reply) => {
     // Validation schema
     const createTransactionBodySchema = z.object({
